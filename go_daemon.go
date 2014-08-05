@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os/exec"
 	"sync"
@@ -10,17 +9,16 @@ import (
 
 func main() {
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(2)
+	go listenForRealtime(&wg)
 	go reportLoop(&wg)
-	// go otherLoop(&wg)
 	wg.Wait()
 }
 
 func reportLoop(wg *sync.WaitGroup) {
-	c := time.Tick(1 * time.Minute)
-	for now := range c {
-		var _ = now
-		// fmt.Printf("report loop %v\n", now)
+	c := time.Tick(1 * time.Second)
+	for _ = range c {
+		// fmt.Printf("report loop\n")
 		cmd := exec.Command("/home/matt/.scout/scout_cron.sh")
 		err := cmd.Run()
 		if err != nil {
@@ -30,10 +28,6 @@ func reportLoop(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func otherLoop(wg *sync.WaitGroup) {
-	c := time.Tick(10 * time.Second)
-	for now := range c {
-		fmt.Printf("other loop %v\n", now)
-	}
+func listenForRealtime(wg *sync.WaitGroup) {
 	wg.Done()
 }

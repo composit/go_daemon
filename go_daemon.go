@@ -29,5 +29,6 @@ func reportLoop(wg *sync.WaitGroup) {
 }
 
 func listenForRealtime(wg *sync.WaitGroup) {
+	// add realtime listener
 	wg.Done()
 }
